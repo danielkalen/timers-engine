@@ -42,7 +42,7 @@
         }
         return this.callbacks[label][targetTime].push(callbackToInvoke);
       };
-      return this.invokeCallbacks = function(label, timePassed) {
+      this.invokeCallbacks = function(label, timePassed) {
         var callback, exceededTimePoints, i, len, results;
         if (this.callbacks[label]) {
           exceededTimePoints = Object.keys(this.callbacks[label]).filter(function(timePoint) {
@@ -58,6 +58,7 @@
           }
         }
       };
+      return this;
     };
     return window.Timer = Timer;
   })();

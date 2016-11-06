@@ -40,5 +40,7 @@ do ()->
 				callback() for callback in exceededTimePoints
 
 
+		return @
+
 
 	window.Timer = Timer
