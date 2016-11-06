@@ -1,13 +1,14 @@
 {
   "name": "@danielkalen/timers-engine",
   "version": "1.0.0",
-  "description": "A simple timer event system - registration and callback invokation upon intervals/timeouts",
+  "description": "A simple timer event system - registration and callback invocation upon intervals/timeouts",
   "main": "dist/timers.js",
   "author": "danielkalen",
   "license": "MIT",
   "scripts": {
     "watch": "nodemon -e coffee -w ./src -x 'npm run compile'",
-    "compile": "simplyimport -i src/timers.coffee | coffee -c -s > dist/timers.js && npm run minify",
+    "build": "npm run compile && npm run minify",
+    "compile": "simplyimport -i src/timers.coffee | coffee -c -s > dist/timers.js",
     "minify": "closure-service dist/timers.js > dist/timers.min.js"
   },
   "devDependencies": {
