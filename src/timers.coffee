@@ -1,45 +1,44 @@
 do ()->
-	@timers =
-		timers: {}
-		callbacks: {}
-		currentTimes: {}
+	Timer = new ()->
+		@timers = {}
+		@callbacks = {}
+		@timePassed = {}
 
-		add: (type = 'interval', name, callback, time, stopAfter)->
-			timers.currentTimes[name] = time
-			timers.callbacks[name] = {}
+		@add = ({label, interval, stopAfter, updateCallback})->
+			@timePassed[label] = 0
+			@callbacks[label] = {}
+			startTime = Date.now()
 
-			if type is 'timeout'
-				timers.timers[name] = setTimeout ()->
-					callback()
-				, time
+			@timers[label] = setInterval ()=>
+				updateCallback?()
+				@timePassed[label] = Date.now()-startTime
+				@invokeCallbacks(label, @timePassed[label])
+			, interval
 
-			else if type is 'interval'
-				timers.timers[name] = setInterval ()->
-					callback()
-					timers.invoke(name, time)
-				, time
+			if stopAfter
+				setTimeout ()=>
+					@remove(label)
+				, stopAfter
 
-				if stopAfter
-					setTimeout ()->
-						clearInterval timers.timers[name]
-					, stopAfter
 
-		remove: (name)->
-			clearInterval(timers.timers[name])
-			delete timers.timers[name]
-			delete timers.callbacks[name]
-			delete timers.currentTimes[name]
+		@remove = (label)->
+			clearInterval(@timers[label])
+			delete @timers[label]
+			delete @callbacks[label]
+			delete @timePassed[label]
 
-		invoke: (name, time)->
-			prevTime = timers.currentTimes[name]
-			newTime = timers.currentTimes[name] = prevTime+time
 
-			if timers.callbacks[name][newTime]?
-				for callback in timers.callbacks[name][newTime]
-					callback()
+		@listen = (label, targetTime, callbackToInvoke)->
+			@callbacks[label][targetTime] ?= []
+			@callbacks[label][targetTime].push(callbackToInvoke)
 
-		listen: (name, time, callbackToInvoke)->
-			if !timers.callbacks[name][time]?
-				timers.callbacks[name][time] = []
 
-			timers.callbacks[name][time].push(callbackToInvoke)
+		@invokeCallbacks = (label, timePassed)-> if @callbacks[label]
+			exceededTimePoints = Object.keys(@callbacks[label]).filter (timePoint)-> parseFloat(timePoint) < timePassed
+			
+			if exceededTimePoints.length
+				callback() for callback in exceededTimePoints
+
+
+
+	window.Timer = Timer
