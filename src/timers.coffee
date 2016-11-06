@@ -29,15 +29,20 @@ do ()->
 
 
 		@listen = (label, targetTime, callbackToInvoke)->
-			@callbacks[label][targetTime] ?= []
-			@callbacks[label][targetTime].push(callbackToInvoke)
+			if not @callbacks[label]
+				console.error "Failed to listen to a timer - '#{label}' doesn't exist."
+			else
+				@callbacks[label][targetTime] ?= []
+				@callbacks[label][targetTime].push(callbackToInvoke)
 
 
 		@invokeCallbacks = (label, timePassed)-> if @callbacks[label]
 			exceededTimePoints = Object.keys(@callbacks[label]).filter (timePoint)-> parseFloat(timePoint) < timePassed
 			
 			if exceededTimePoints.length
-				callback() for callback in exceededTimePoints
+				for timePoint in exceededTimePoints
+					@callbacks[timePoint]?()
+					delete @callbacks[timePoint]
 
 
 		return @

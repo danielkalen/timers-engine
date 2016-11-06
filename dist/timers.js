@@ -37,13 +37,17 @@
       };
       this.listen = function(label, targetTime, callbackToInvoke) {
         var base;
-        if ((base = this.callbacks[label])[targetTime] == null) {
-          base[targetTime] = [];
+        if (!this.callbacks[label]) {
+          return console.error("Failed to listen to a timer - '" + label + "' doesn't exist.");
+        } else {
+          if ((base = this.callbacks[label])[targetTime] == null) {
+            base[targetTime] = [];
+          }
+          return this.callbacks[label][targetTime].push(callbackToInvoke);
         }
-        return this.callbacks[label][targetTime].push(callbackToInvoke);
       };
       this.invokeCallbacks = function(label, timePassed) {
-        var callback, exceededTimePoints, i, len, results;
+        var base, exceededTimePoints, i, len, results, timePoint;
         if (this.callbacks[label]) {
           exceededTimePoints = Object.keys(this.callbacks[label]).filter(function(timePoint) {
             return parseFloat(timePoint) < timePassed;
@@ -51,8 +55,8 @@
           if (exceededTimePoints.length) {
             results = [];
             for (i = 0, len = exceededTimePoints.length; i < len; i++) {
-              callback = exceededTimePoints[i];
-              results.push(callback());
+              timePoint = exceededTimePoints[i];
+              results.push(typeof (base = this.callbacks)[timePoint] === "function" ? base[timePoint]() : void 0);
             }
             return results;
           }
