@@ -1,6 +1,6 @@
 {
   "name": "@danielkalen/timers-engine",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A simple timer event system - registration and callback invocation upon intervals/timeouts",
   "main": "dist/timers.js",
   "author": "danielkalen",
