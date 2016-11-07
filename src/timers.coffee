@@ -41,8 +41,8 @@ do ()->
 			
 			if exceededTimePoints.length
 				for timePoint in exceededTimePoints
-					@callbacks[timePoint]?()
-					delete @callbacks[timePoint]
+					callback() for callback in @callbacks[label][timePoint]
+					delete @callbacks[label][timePoint]
 
 
 		return @

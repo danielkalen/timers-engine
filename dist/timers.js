@@ -47,7 +47,7 @@
         }
       };
       this.invokeCallbacks = function(label, timePassed) {
-        var base, exceededTimePoints, i, len, results, timePoint;
+        var callback, exceededTimePoints, i, j, len, len1, ref, results, timePoint;
         if (this.callbacks[label]) {
           exceededTimePoints = Object.keys(this.callbacks[label]).filter(function(timePoint) {
             return parseFloat(timePoint) < timePassed;
@@ -56,7 +56,12 @@
             results = [];
             for (i = 0, len = exceededTimePoints.length; i < len; i++) {
               timePoint = exceededTimePoints[i];
-              results.push(typeof (base = this.callbacks)[timePoint] === "function" ? base[timePoint]() : void 0);
+              ref = this.callbacks[label][timePoint];
+              for (j = 0, len1 = ref.length; j < len1; j++) {
+                callback = ref[j];
+                callback();
+              }
+              results.push(delete this.callbacks[label][timePoint]);
             }
             return results;
           }
