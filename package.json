@@ -6,7 +6,7 @@
   "author": "danielkalen",
   "license": "MIT",
   "scripts": {
-    "postversion": "npm run compile && git add . && git commit -a -m '[Build]'",
+    "postversion": "npm run build && git add . && git commit -a -m '[Build]'",
     "build": "npm run compile && npm run minify",
     "compile": "simplyimport bundle -d src/index.coffee > dist/timers.js",
     "minify": "closure-service dist/timers.js > dist/timers.min.js",
