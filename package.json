@@ -1,6 +1,6 @@
 {
   "name": "@danielkalen/timers-engine",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "A simple timer event system - registration and callback invocation upon intervals/timeouts",
   "main": "dist/timers.js",
   "browser": "src/index.coffee",
